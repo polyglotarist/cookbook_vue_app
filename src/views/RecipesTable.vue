@@ -9,34 +9,37 @@
       </datalist>
     </div>
 
-    <div>
-      <button v-on:click="setSortAttribute('title')">Sort by Title</button>
-      <button v-on:click="setSortAttribute('prep_time')">Sort by Prep Time</button>
-    </div>
+    <table class="table table-striped table-dark">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col" v-on:click="setSortAttribute('id')">ID
+            <span v-if="sortAttribute === 'id' && sortOrder === 1"> ^</span>
+            <span v-else-if="sortAttribute === 'id' && sortOrder === -1"> v</span>
 
-    <table style="width:100%">
-      <tr>
-        <th>ID</th>
-        <th>Title</th> 
-        <th>Chef</th>
-        <th>Prep Time</th>
-      </tr>
-      <tr v-for="recipe in orderBy(filterBy(recipes, titleFilter, 'title'), sortAttribute)">
-        <td>
-          {{ recipe.id }}
-        </td>
-        <td>
-          <router-link v-bind:to="'/recipes/' + recipe.id">
-            {{ recipe.title }}
-          </router-link>
-        </td>
-        <td>
-          {{ recipe.chef }}
-        </td>
-        <td>
-          {{ recipe.formatted.prep_time }}
-        </td>
-      </tr>
+          </th>
+          <th scope="col" v-on:click="setSortAttribute('title')">Title<span v-if="sortAttribute === 'title'"> *</span></th> 
+          <th scope="col" v-on:click="setSortAttribute('chef')">Chef<span v-if="sortAttribute === 'chef'"> *</span></th>
+          <th scope="col" v-on:click="setSortAttribute('prep_time')">Prep Time<span v-if="sortAttribute === 'prep_time'"> *</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="recipe in orderBy(filterBy(recipes, titleFilter, 'title'), sortAttribute, sortOrder)">
+          <th scope="row">
+            {{ recipe.id }}
+          </th>
+          <td>
+            <router-link v-bind:to="'/recipes/' + recipe.id">
+              {{ recipe.title }}
+            </router-link>
+          </td>
+          <td>
+            {{ recipe.chef }}
+          </td>
+          <td>
+            {{ recipe.formatted.prep_time }}
+          </td>
+        </tr>
+      </tbody>
     </table>
 
   </div>
@@ -55,7 +58,8 @@ export default {
       recipes: [],
       currentRecipe: {},
       titleFilter: '',
-      sortAttribute: 'title'
+      sortAttribute: 'title',
+      sortOrder: 1
     };
   },
   created: function() {
@@ -66,7 +70,12 @@ export default {
   },
   methods: {
     setSortAttribute: function(inputAttribute) {
-      this.sortAttribute = inputAttribute;
+      if (this.sortAttribute === inputAttribute) {
+        this.sortOrder *= -1;
+      } else {
+        this.sortAttribute = inputAttribute;
+        this.sortOrder = 1;
+      }
     }
   },
   mixins: [Vue2Filters.mixin]
