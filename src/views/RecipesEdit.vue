@@ -36,49 +36,49 @@
 </style>
 
 <script>
-var axios = require('axios');
+  var axios = require('axios');
 
-export default {
-  data: function() { 
-    return {
-      recipe: {
-                id: "",
-                title: "",
-                chef: "",
-                ingredients: "",
-                prep_time: "",
-                image_url: ""
-              },
-      errors: []
-    };
-  },
-  created: function() {
-    axios.get("/api/recipes/" + this.$route.params.id )
-      .then(response => {
-        console.log(response.data);
-        this.recipe = response.data;
-      });
-  },
-  methods: {
-    submit: function() {
-      var params = {
-                    title: this.recipe.title,
-                    chef: this.recipe.chef,
-                    prep_time: this.recipe.prep_time,
-                    ingredients: this.recipe.ingredients,
-                    directions: this.recipe.directions,
-                    image_url: this.recipe.image_url
-                    };
-
-      axios.patch("/api/recipes/" + this.recipe.id, params)
+  export default {
+    data: function() { 
+      return {
+        recipe: {
+                  id: "",
+                  title: "",
+                  chef: "",
+                  ingredients: "",
+                  prep_time: "",
+                  image_url: ""
+                },
+        errors: []
+      };
+    },
+    created: function() {
+      axios.get("/api/recipes/" + this.$route.params.id )
         .then(response => {
-          this.$router.push("/recipes/" + this.recipe.id);
-        }).catch(error => {
-          this.errors = error.response.data.errors;
+          console.log(response.data);
+          this.recipe = response.data;
         });
+    },
+    methods: {
+      submit: function() {
+        var params = {
+                      title: this.recipe.title,
+                      chef: this.recipe.chef,
+                      prep_time: this.recipe.prep_time,
+                      ingredients: this.recipe.ingredients,
+                      directions: this.recipe.directions,
+                      image_url: this.recipe.image_url
+                      };
+
+        axios.patch("/api/recipes/" + this.recipe.id, params)
+          .then(response => {
+            this.$router.push("/recipes/" + this.recipe.id);
+          }).catch(error => {
+            this.errors = error.response.data.errors;
+          });
+      }
     }
   }
-}
 </script>
 
 

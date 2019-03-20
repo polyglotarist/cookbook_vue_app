@@ -12,18 +12,14 @@
     <table class="table table-striped table-dark">
       <thead class="thead-light">
         <tr>
-          <th scope="col" v-on:click="setSortAttribute('id')">ID
-            <span v-if="sortAttribute === 'id' && sortOrder === 1"> ^</span>
-            <span v-else-if="sortAttribute === 'id' && sortOrder === -1"> v</span>
-
-          </th>
-          <th scope="col" v-on:click="setSortAttribute('title')">Title<span v-if="sortAttribute === 'title'"> *</span></th> 
-          <th scope="col" v-on:click="setSortAttribute('chef')">Chef<span v-if="sortAttribute === 'chef'"> *</span></th>
-          <th scope="col" v-on:click="setSortAttribute('prep_time')">Prep Time<span v-if="sortAttribute === 'prep_time'"> *</span></th>
+          <th scope="col" v-on:click="setSortAttribute('id')">ID {{ orderIndicator('id') }}</th>
+          <th scope="col" v-on:click="setSortAttribute('title')">Title  {{ orderIndicator('title') }}</th> 
+          <th scope="col" v-on:click="setSortAttribute('chef')">Chef {{ orderIndicator('chef') }}</th>
+          <th scope="col" v-on:click="setSortAttribute('prep_time')">Prep Time {{ orderIndicator('prep_time') }}</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="recipe in orderBy(filterBy(recipes, titleFilter, 'title'), sortAttribute, sortOrder)">
+      <tbody is="transition-group" name="slide-left">
+        <tr v-for="recipe in orderBy(filterBy(recipes, titleFilter, 'title'), sortAttribute, sortOrder)" v-bind:key="recipe.id">
           <th scope="row">
             {{ recipe.id }}
           </th>
@@ -75,6 +71,17 @@ export default {
       } else {
         this.sortAttribute = inputAttribute;
         this.sortOrder = 1;
+      }
+    },
+    orderIndicator: function(inputAttribute) {
+      if (this.sortAttribute === inputAttribute) {
+        if (this.sortOrder === 1) {
+          return "▼";
+        } else {
+          return "▲";
+        }
+      } else {
+        return " ";
       }
     }
   },
